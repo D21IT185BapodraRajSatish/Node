@@ -1,0 +1,57 @@
+version: 0.0
+os: linux
+
+resources:
+  - appspec.yml
+  - scripts/
+  - source/
+
+phases:
+  - install:
+      runtime-versions:
+        nodejs: 12
+
+  - pre_build:
+      commands:
+        - echo Installing dependencies...
+        - cd source
+        - npm ci --only=prod
+
+  - build:
+      commands:
+        - echo Build phase is empty as this is a Node.js project
+
+  - post_build:
+      commands:
+        - echo Running tests...
+        - npm test
+
+  - install_dependencies:
+      commands:
+        - echo Installing dev dependencies...
+        - cd source
+        - npm ci --only=dev
+
+  - before_install:
+      commands:
+        - echo Stopping the previous version of the service...
+        # Add any commands to stop your Express.js service here
+
+  - application_start:
+      commands:
+        - echo Starting the new version of the service...
+        - cd source
+        - npm start
+
+  - after_install:
+      commands:
+        - echo Updating file permissions...
+        - cd source
+        - chmod -R 755 *
+
+  - cleanup:
+      commands:
+        - echo Cleaning up old deployment files...
+        - cd source
+        - rm -rf node_modules
+

@@ -1,0 +1,27 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 12 # Specify the desired Node.js version
+    commands:
+      - echo Installing project dependencies...
+      - npm ci --only=prod # Install production dependencies only
+
+  pre_build:
+    commands:
+      - echo Running pre-build tasks...
+      # Add any pre-build tasks here, such as running database migrations or environment setup
+
+  post_build:
+    commands:
+      - echo Running tests...
+      - npm test # Execute your test suite (if specified in your package.json)
+
+artifacts:
+  files:
+    - '**/*' # Include all files in the build artifact
+
+cache:
+  paths:
+    - node_modules/ # Cache the installed node_modules directory for faster builds
